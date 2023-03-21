@@ -258,10 +258,10 @@ def main():
         cols = ["run", "drug", "classification", "tool"]
     df = pd.DataFrame(pheno_clf, columns=cols)
 
-    df.to_csv(snakemake.output.classification, index=False)
-
     # now we remove samples with low depth or high contamination
     df.query("run in @valid_samples", inplace=True)
+
+    df.to_csv(snakemake.output.classification, index=False)
 
     cms = defaultdict()
 

@@ -8,7 +8,7 @@ import seaborn as sns
 from matplotlib.colors import to_rgba
 from statannotations.Annotator import Annotator
 
-plt.style.use("ggplot")
+plt.style.use("seaborn-whitegrid")
 FS = snakemake.params.fontsize
 PALETTE = snakemake.params.palette
 DPI = snakemake.params.dpi
