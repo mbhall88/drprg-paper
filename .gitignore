@@ -1,0 +1,5 @@
+/.idea
+.DS_Store
+results/
+docs/paper
+tmp/
