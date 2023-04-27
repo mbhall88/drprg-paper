@@ -276,6 +276,7 @@ rule mykrobe_to_hgvs:
     input:
         panel=rules.convert_mutations.output.panel,
         gff=RESOURCES / "NC_000962.3.gff3",
+        rules=rules.filter_panel_for_expert_rules.input.rules,
     output:
         panel=RESOURCES / "mykrobe_to_hgvs.csv",
     log:
@@ -285,10 +286,9 @@ rule mykrobe_to_hgvs:
     params:
         script=SCRIPTS / "mykrobe_to_hgvs.py",
         opts="-v",
-        expert_rules=config["expert_rules"],
     shell:
         """
-        python {params.script} {params.opts} -E {params.expert_rules} \
+        python {params.script} {params.opts} -E {input.rules} \
             -i {input.panel} -g {input.gff} -o {output.panel} 2> {log}
         """
 

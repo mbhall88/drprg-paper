@@ -406,6 +406,7 @@ class RuleType(Enum):
     Missense = "missense"
     Frameshift = "frame"
     Nonsense = "nonsense"
+    Absense = "absence"
 
 
 @dataclass
@@ -415,7 +416,6 @@ class Rule:
     drug: str
     start: Optional[int] = None  # 1-based inclusive
     stop: Optional[int] = None  # 1-based inclusive
-    grade: Optional[int] = None
 
 
 def main():
@@ -450,7 +450,7 @@ def main():
         type=Path,
         help=(
             "Comma-separated file with expert rules. The format of this file is type, gene, start, "
-            "stop, drugs (semi-colon (;) separated), grade. Valid types are missense, "
+            "stop, drugs (semi-colon (;) separated). Valid types are missense, "
             "frame (any frameshift indel), or nonsense (premature stop codon). If both "
             "start and stop are empty, the whole "
             "gene is used. If only start is given, then stop is considered the end of "
@@ -486,7 +486,6 @@ def main():
                 fields = row.split(",")
                 start = int(fields[2]) if fields[2] else None
                 stop = int(fields[3]) if fields[3] else None
-                grade = int(fields[5]) if fields[5] else None
                 drug = fields[4]
                 rule = Rule(
                     rule_type=RuleType(fields[0]),
@@ -494,7 +493,6 @@ def main():
                     drug=drug,
                     start=start,
                     stop=stop,
-                    grade=grade,
                 )
                 gene2rules[rule.gene].append(rule)
                 n_rules += 1
@@ -511,7 +509,6 @@ def main():
     with open(args.output, "w") as out_fp, open(args.panel) as in_fp:
         print(",".join(HEADER), file=out_fp)
 
-        # add frameshift genes
         for gene, rules in gene2rules.items():
             for rule in rules:
                 tbp_names = []
@@ -523,6 +520,8 @@ def main():
                             # this commented section doesn't work in tbprofiler
                             # tbp_name = f"any_indel_nucleotide_{rule.start}_{rule.stop}"
                             continue
+                    case RuleType.Absense:
+                        tbp_names.append("transcript_ablation")
                     case RuleType.Nonsense if rule.start is None:
                         # tbprofiler doesnt seem to support this anymore?
                         # tbp_name = "premature_stop"
