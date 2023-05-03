@@ -16,7 +16,10 @@ rule download_data:
     shadow:
         "shallow"
     shell:
-        "fastq-dl {params.opts} --outdir {output.outdir} -a {wildcards.run} --provider {params.db} > {log} 2>&1"
+        """
+        /usr/local/bin/_entrypoint.sh 2> {log}
+        fastq-dl {params.opts} --outdir {output.outdir} -a {wildcards.run} --provider {params.db} 2>> {log}
+        """
 
 
 rule validate_run_info:
