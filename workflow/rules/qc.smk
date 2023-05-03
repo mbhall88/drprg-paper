@@ -3,7 +3,7 @@ rule preprocessing:
         run_dir=rules.download_data.output.outdir,
         run_info=rules.validate_run_info.output.run_info,
     output:
-        fastq=RESULTS / "preprocessing/{tech}/{proj}/{sample}/{run}.fq.gz",
+        fastq=temp(RESULTS / "preprocessing/{tech}/{proj}/{sample}/{run}.fq.gz"),
     threads: 2
     resources:
         mem_mb=lambda wildcards, attempt: attempt * int(16 * GB),
@@ -16,6 +16,8 @@ rule preprocessing:
         script=SCRIPTS / "preprocessing.sh",
     shadow:
         "shallow"
+    group:
+        "qc"
     shell:
         """
         bash {params.script} -r {wildcards.run} -i {input.run_info} \
@@ -86,6 +88,8 @@ rule map_to_decontam_db:
         bam=temp(RESULTS / "mapped/{tech}/{proj}/{sample}/{run}.sorted.bam"),
         index=temp(RESULTS / "mapped/{tech}/{proj}/{sample}/{run}.sorted.bam.bai"),
     threads: 4
+    group:
+        "qc"
     resources:
         mem_mb=lambda wildcards, attempt: attempt * int(16 * GB),
     params:
@@ -114,6 +118,8 @@ rule filter_contamination:
     threads: 1
     resources:
         mem_mb=lambda wildcards, attempt: attempt * 4 * GB,
+    group:
+        "qc"
     conda:
         str(ENVS / "filter.yaml")
     params:
@@ -139,6 +145,8 @@ rule extract_decontaminated_reads:
         reads=RESULTS / "filtered/{tech}/{proj}/{sample}/{run}/{run}.filtered.fq.gz",
         stats=RESULTS / "filtered/{tech}/{proj}/{sample}/{run}/{run}.filtered.stats.tsv",
     threads: 1
+    group:
+        "qc"
     resources:
         mem_mb=lambda wildcards, attempt: int(8 * GB) * attempt,
     log:

@@ -10,10 +10,13 @@ rule download_data:
         mem_mb=lambda wildcards, attempt: attempt * int(2 * GB),
     params:
         db="sra",
+        opts="--verbose"
+    group:
+        "qc"
     shadow:
         "shallow"
     shell:
-        "fastq-dl --outdir {output.outdir} {wildcards.run} {params.db} > {log} 2>&1"
+        "fastq-dl {params.opts} --outdir {output.outdir} -a {wildcards.run} --provider {params.db} > {log} 2>&1"
 
 
 rule validate_run_info:
@@ -27,5 +30,7 @@ rule validate_run_info:
         delim="\t",
     container:
         CONTAINERS["python"]
+    group:
+        "qc"
     script:
         str(SCRIPTS / "validate_run_info.py")
