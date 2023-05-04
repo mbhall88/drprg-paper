@@ -404,7 +404,7 @@ def codon2pos(codon: int) -> int:
 
 class RuleType(Enum):
     Missense = "missense"
-    Frameshift = "frame"
+    Frameshift = "frameshift"
     Nonsense = "nonsense"
     Absense = "absence"
 
