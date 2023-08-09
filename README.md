@@ -1,4 +1,4 @@
-This repository contains the workflow and config files for the Dr. PRG paper.
+This repository contains the workflow and config files for the [Dr. PRG paper](https://doi.org/10.1099/mgen.0.001081).
 See https://github.com/mbhall88/drprg for the Dr. PRG software repository.
 
 To run the pipeline you will need [`conda`](https://docs.conda.io/en/latest/) and
@@ -21,7 +21,7 @@ links to the publications that generated them.
 
 ## Availability
 
-The version of the repository used for the prerint is archived
+The version of the repository used for [the paper](https://doi.org/10.1099/mgen.0.001081) is archived
 at <https://doi.org/10.5281/zenodo.7819984>. Within that archive, but not in this GitHub
 repository, is [the population VCF][vcf] we used to build the *M. tuberculosis*
 reference
